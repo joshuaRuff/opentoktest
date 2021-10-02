@@ -1,0 +1,9 @@
+body, html {
+    background-color: gray;
+    height: 100%;
+}
+
+.error {
+    color: red;
+}
+
