@@ -12,19 +12,25 @@ body, html {
 }
 
 #subscriber {
-    position: absolute;
-    left: 0;
-    top: 0;
     width: 100%;
-    height: 100%;
     z-index: 10;
+    display: flex;
+    flex-wrap: wrap;
 }
+
+#subscriber .OT_root {
+    width: 360px !important;
+    height: 240px !important;
+    min-width: 360px;
+    min-height: 240px;
+}
+
 
 #publisher {
     position: absolute;
-    width: 360px;
-    height: 240px;
-    top: 10px;
+    width: 260px;
+    height: 160px;
+    bottom: 10px;
     right: 10px;
     z-index: 100;
     border: 3px solid white;
