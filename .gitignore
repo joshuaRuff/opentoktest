@@ -9,6 +9,9 @@
 # production
 /build
 
+# kea
+*Type.ts
+
 # misc
 .DS_Store
 .env.local

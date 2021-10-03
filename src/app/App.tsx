@@ -1,12 +1,18 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { OTSession, OTPublisher, OTStreams, OTSubscriber } from 'opentok-react';
 
-const App = (props) => {
-  const [error, setError] = useState(null);
-  const [connection, setStatus] = useState('Connecting');
-  const [publishVideo, toggleVideo] = useState(true);
-  
-  const { apiKey, sessionId, token } = props.credentials;
+import { Credentials } from '../common/types';
+
+interface Props {
+  credentials: Credentials;
+}
+
+const App: React.FC<Props> = ({ credentials }: Props) => {
+  const [error, setError] = useState<string>();
+  const [connection, setStatus] = useState<string>('Connecting');
+  const [publishVideo, toggleVideo] = useState<boolean>(true);
+
+  const { apiKey, sessionId, token } = credentials;
 
   const sessionEventHandlers = {
     sessionConnected: () => {
@@ -30,7 +36,7 @@ const App = (props) => {
     streamCreated: () => {
       console.log('Publisher stream created');
     },
-    streamDestroyed: ({ reason }) => {
+    streamDestroyed: ({ reason }: { reason: string }) => {
       console.log(`Publisher stream destroyed because: ${reason}`);
     },
   };
@@ -44,25 +50,25 @@ const App = (props) => {
     },
   };
 
-  function onSessionError(error) {
-    setError(error);
-  };
+  const onSessionError = useCallback((sessionError: any) => {
+    setError(sessionError);
+  }, []);
 
-  function onPublish() {
+  const onPublish = useCallback(() => {
     console.log('Publish Success');
-  };
+  }, []);
 
-  function onPublishError(error) {
-    setError(error);
-  };
+  const onPublishError = useCallback((publishError: any) => {
+    setError(publishError);
+  }, []);
 
-  function onSubscribe() {
+  const onSubscribe = useCallback(() => {
     console.log('Subscribe Success');
-  };
+  }, []);
 
-  function onSubscribeError(error) {
-    setError(error);
-  };
+  const onSubscribeError = useCallback((subscribeError: any) => {
+    setError(subscribeError);
+  }, []);
 
   return (
     <div>
@@ -79,12 +85,16 @@ const App = (props) => {
         onError={onSessionError}
         eventHandlers={sessionEventHandlers}
       >
-        <button id="videoButton" onClick={() => toggleVideo(!publishVideo)}>
+        <button
+          type="button"
+          id="videoButton"
+          onClick={() => toggleVideo(!publishVideo)}
+        >
           {publishVideo ? 'Disable' : 'Enable'} Video
         </button>
 
         <OTPublisher
-          properties={{ publishVideo, width: 260, height: 160, }}
+          properties={{ publishVideo, width: 260, height: 160 }}
           onPublish={onPublish}
           onError={onPublishError}
           eventHandlers={publisherEventHandlers}
@@ -95,11 +105,11 @@ const App = (props) => {
             onSubscribe={onSubscribe}
             onError={onSubscribeError}
             eventHandlers={subscriberEventHandlers}
-            />
+          />
         </OTStreams>
       </OTSession>
     </div>
   );
-}
+};
 
 export default App;
