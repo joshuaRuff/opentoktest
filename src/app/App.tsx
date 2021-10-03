@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { useCallback, useState } from 'react';
 import { OTSession, OTPublisher, OTStreams, OTSubscriber } from 'opentok-react';
 
