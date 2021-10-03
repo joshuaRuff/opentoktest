@@ -13,7 +13,6 @@ import { SERVER_BASE_URL } from './config';
 import { Credentials } from './common/types';
 
 function renderApp(credentials: Credentials) {
-  console.log('Creds: ', credentials);
   ReactDOM.render(
     <Provider>
       <App credentials={credentials} />
