@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { OTSession, OTPublisher, OTStreams, OTSubscriber } from 'opentok-react';
+import Loader from 'react-loader-spinner';
 
 import { useActions, useValues } from 'kea';
 import AppLogic from '../../App.logic';
@@ -8,7 +9,8 @@ import AppLogic from '../../App.logic';
 const CallPage: React.FC = () => {
   const { getCredentials, setAudioStatus, setVideoStatus } =
     useActions(AppLogic);
-  const { audioEnabled, credentials, videoEnabled } = useValues(AppLogic);
+  const { audioEnabled, credentials, loading, videoEnabled } =
+    useValues(AppLogic);
   const publisherRef = useRef(null);
 
   const [error, setError] = useState<string>();
@@ -18,7 +20,7 @@ const CallPage: React.FC = () => {
 
   useEffect(() => {
     if (!apiKey || !sessionId || !token) {
-      getCredentials();
+      getCredentials('session');
     }
   }, []);
 
@@ -80,55 +82,58 @@ const CallPage: React.FC = () => {
 
   return (
     <div>
-      <div id="sessionStatus">Session Status: {connection}</div>
-      {error ? (
-        <div className="error">
-          <strong>Error:</strong> {error}
-        </div>
-      ) : null}
-      <OTSession
-        apiKey={apiKey}
-        sessionId={sessionId}
-        token={token}
-        onError={onSessionError}
-        eventHandlers={sessionEventHandlers}
-      >
-        <button
-          type="button"
-          id="videoButton"
-          onClick={() => setAudioStatus(!audioEnabled)}
-        >
-          {audioEnabled ? 'Disable' : 'Enable'} Audio
-        </button>
-        <button
-          type="button"
-          id="videoButton"
-          onClick={() => setVideoStatus(!videoEnabled)}
-        >
-          {videoEnabled ? 'Disable' : 'Enable'} Video
-        </button>
+      {loading && (
+        <Loader type="TailSpin" color="#363636" height={100} width={100} />
+      )}
+      {error && <p>{error}</p>}
+      {apiKey && token && sessionId && (
+        <>
+          <div id="sessionStatus">Session Status: {connection}</div>
+          <OTSession
+            apiKey={apiKey}
+            sessionId={sessionId}
+            token={token}
+            onError={onSessionError}
+            eventHandlers={sessionEventHandlers}
+          >
+            <button
+              type="button"
+              id="videoButton"
+              onClick={() => setAudioStatus(!audioEnabled)}
+            >
+              {audioEnabled ? 'Disable' : 'Enable'} Audio
+            </button>
+            <button
+              type="button"
+              id="videoButton"
+              onClick={() => setVideoStatus(!videoEnabled)}
+            >
+              {videoEnabled ? 'Disable' : 'Enable'} Video
+            </button>
 
-        <OTPublisher
-          properties={{
-            publishAudio: audioEnabled,
-            publishVideo: videoEnabled,
-            width: 260,
-            height: 160,
-          }}
-          onPublish={onPublish}
-          onError={onPublishError}
-          eventHandlers={publisherEventHandlers}
-          ref={publisherRef}
-        />
-        <OTStreams>
-          <OTSubscriber
-            properties={{ width: 360, height: 240 }}
-            onSubscribe={onSubscribe}
-            onError={onSubscribeError}
-            eventHandlers={subscriberEventHandlers}
-          />
-        </OTStreams>
-      </OTSession>
+            <OTPublisher
+              properties={{
+                publishAudio: audioEnabled,
+                publishVideo: videoEnabled,
+                width: 260,
+                height: 160,
+              }}
+              onPublish={onPublish}
+              onError={onPublishError}
+              eventHandlers={publisherEventHandlers}
+              ref={publisherRef}
+            />
+            <OTStreams>
+              <OTSubscriber
+                properties={{ width: 360, height: 240 }}
+                onSubscribe={onSubscribe}
+                onError={onSubscribeError}
+                eventHandlers={subscriberEventHandlers}
+              />
+            </OTStreams>
+          </OTSession>
+        </>
+      )}
     </div>
   );
 };

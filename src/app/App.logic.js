@@ -48,7 +48,10 @@ export default kea({
 
         actions.setCredentials(response.data);
       } catch (error) {
-        console.error('Error fetching credentials: ', error.message);
+        console.error(
+          'Error fetching Vontage Tokbox credentials: ',
+          error.message,
+        );
       } finally {
         actions.setLoading(false);
       }

@@ -55,6 +55,7 @@ const LandingPage: React.FC = () => {
                 src="https://storage.sardius.media/-F3gEki2EeAOjKwDl8iC/archives/D7742FeA51811363c28DCC7E60eA/static/f96D09/b466B33cAF8C.jpg?width=500"
               />
             )}
+
             <div className="videoActions">
               <button
                 className={`sm-button ${!audioEnabled && 'sm-button-off'}`}
@@ -72,6 +73,7 @@ const LandingPage: React.FC = () => {
               </button>
             </div>
           </div>
+
           <div className="sm-column">
             <h1 className="sm-title">WebRTC Meet</h1>
             <button className="sm-button" onClick={onJoin} type="button">
