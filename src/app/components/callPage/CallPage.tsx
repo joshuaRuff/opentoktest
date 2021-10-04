@@ -1,5 +1,7 @@
 /* eslint-disable no-console */
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useHistory } from 'react-router-dom';
+
 import { OTSession, OTPublisher, OTStreams, OTSubscriber } from 'opentok-react';
 import Loader from 'react-loader-spinner';
 
@@ -7,8 +9,7 @@ import { useActions, useValues } from 'kea';
 import AppLogic from '../../App.logic';
 
 const CallPage: React.FC = () => {
-  const { getCredentials, setAudioStatus, setVideoStatus } =
-    useActions(AppLogic);
+  const { setAudioStatus, setVideoStatus } = useActions(AppLogic);
   const { audioEnabled, credentials, loading, videoEnabled } =
     useValues(AppLogic);
   const publisherRef = useRef(null);
@@ -17,10 +18,11 @@ const CallPage: React.FC = () => {
   const [connection, setStatus] = useState<string>('Connecting');
 
   const { apiKey, sessionId, token } = credentials;
+  const history = useHistory();
 
   useEffect(() => {
     if (!apiKey || !sessionId || !token) {
-      getCredentials('session');
+      history.push(`/`);
     }
   }, []);
 
@@ -98,17 +100,24 @@ const CallPage: React.FC = () => {
           >
             <button
               type="button"
-              id="videoButton"
+              id={audioEnabled ? 'videoButton' : 'leaveCallButton'}
               onClick={() => setAudioStatus(!audioEnabled)}
             >
               {audioEnabled ? 'Disable' : 'Enable'} Audio
             </button>
             <button
               type="button"
-              id="videoButton"
+              id={videoEnabled ? 'videoButton' : 'leaveCallButton'}
               onClick={() => setVideoStatus(!videoEnabled)}
             >
               {videoEnabled ? 'Disable' : 'Enable'} Video
+            </button>
+            <button
+              type="button"
+              id="leaveCallButton"
+              onClick={() => history.push(`/`)}
+            >
+              Leave Call
             </button>
 
             <OTPublisher
