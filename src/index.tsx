@@ -9,32 +9,14 @@ import App from './app/App';
 import './index.css';
 import './polyfills';
 
-import { SERVER_BASE_URL } from './config';
-import { Credentials } from './common/types';
-
-function renderApp(credentials: Credentials) {
-  ReactDOM.render(
-    <Provider>
-      <App credentials={credentials} />
-    </Provider>,
-    document.getElementById('root'),
-  );
-}
-
 resetContext({
-  createStore: {
-    // options for redux (e.g. middleware, reducers, ...)
-  },
-  plugins: [
-    // additional kea plugins
-  ],
+  createStore: {},
+  plugins: [],
 });
 
-if (SERVER_BASE_URL) {
-  fetch(`${SERVER_BASE_URL}/session`)
-    .then(data => data.json())
-    .then(renderApp)
-    .catch(err => {
-      console.error('Failed to get session credentials', err);
-    });
-}
+ReactDOM.render(
+  <Provider>
+    <App />
+  </Provider>,
+  document.getElementById('root'),
+);
