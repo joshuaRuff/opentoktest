@@ -3,6 +3,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { resetContext, Provider } from 'kea';
 
+import '@opentok/client';
+
 import App from './app/App';
 import './index.css';
 import './polyfills';

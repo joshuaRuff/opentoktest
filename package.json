@@ -1,5 +1,5 @@
 {
-  "name": "sardius-web-video-chat",
+  "name": "web-video-chat",
   "version": "0.1.0",
   "private": true,
   "homepage": ".",
@@ -55,6 +55,7 @@
     "react-redux": "^7.2.5",
     "react-router-dom": "^5.3.0",
     "react-scripts": "^4.0.3",
+    "react-webcam": "^6.0.0",
     "redux": "^4.1.1",
     "reselect": "^4.0.0",
     "styled-components": "^5.3.1"

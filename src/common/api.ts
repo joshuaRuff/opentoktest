@@ -2,8 +2,8 @@ import axios, { AxiosPromise } from 'axios';
 
 import { SERVER_BASE_URL } from '../config';
 
-const getCredentials = (): AxiosPromise<any> => {
-  const url = `${SERVER_BASE_URL}/session`;
+const getCredentials = (name: string): AxiosPromise<any> => {
+  const url = `${SERVER_BASE_URL}room/${name}`;
 
   return axios({
     url,

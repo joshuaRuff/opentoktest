@@ -6,12 +6,20 @@ export default kea({
   path: () => ['app'],
 
   actions: {
-    getCredentials: () => ({}),
+    getCredentials: name => ({ name }),
     setCredentials: credentials => ({ credentials }),
+    setAudioStatus: status => ({ status }),
     setLoading: loading => ({ loading }),
+    setVideoStatus: status => ({ status }),
   },
 
   reducers: {
+    audioEnabled: [
+      true,
+      {
+        setAudioStatus: (_, { status }) => status,
+      },
+    ],
     credentials: [
       {},
       {
@@ -24,13 +32,19 @@ export default kea({
         setLoading: (_, { loading }) => loading,
       },
     ],
+    videoEnabled: [
+      true,
+      {
+        setVideoStatus: (_, { status }) => status,
+      },
+    ],
   },
 
   listeners: ({ actions }) => ({
-    getCredentials: async () => {
+    getCredentials: async payload => {
       try {
         actions.setLoading(true);
-        const response = await api.getCredentials();
+        const response = await api.getCredentials(payload.name);
 
         actions.setCredentials(response.data);
       } catch (error) {

@@ -1,19 +1,26 @@
 /* eslint-disable no-console */
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { OTSession, OTPublisher, OTStreams, OTSubscriber } from 'opentok-react';
 
-import { Credentials } from '../../../common/types';
+import { useActions, useValues } from 'kea';
+import AppLogic from '../../App.logic';
 
-interface Props {
-  credentials: Credentials;
-}
+const CallPage: React.FC = () => {
+  const { getCredentials, setAudioStatus, setVideoStatus } =
+    useActions(AppLogic);
+  const { audioEnabled, credentials, videoEnabled } = useValues(AppLogic);
+  const publisherRef = useRef(null);
 
-const CallPage: React.FC<Props> = ({ credentials }: Props) => {
   const [error, setError] = useState<string>();
   const [connection, setStatus] = useState<string>('Connecting');
-  const [publishVideo, toggleVideo] = useState<boolean>(true);
 
   const { apiKey, sessionId, token } = credentials;
+
+  useEffect(() => {
+    if (!apiKey || !sessionId || !token) {
+      getCredentials();
+    }
+  }, []);
 
   const sessionEventHandlers = {
     sessionConnected: () => {
@@ -89,16 +96,29 @@ const CallPage: React.FC<Props> = ({ credentials }: Props) => {
         <button
           type="button"
           id="videoButton"
-          onClick={() => toggleVideo(!publishVideo)}
+          onClick={() => setAudioStatus(!audioEnabled)}
         >
-          {publishVideo ? 'Disable' : 'Enable'} Video
+          {audioEnabled ? 'Disable' : 'Enable'} Audio
+        </button>
+        <button
+          type="button"
+          id="videoButton"
+          onClick={() => setVideoStatus(!videoEnabled)}
+        >
+          {videoEnabled ? 'Disable' : 'Enable'} Video
         </button>
 
         <OTPublisher
-          properties={{ publishVideo, width: 260, height: 160 }}
+          properties={{
+            publishAudio: audioEnabled,
+            publishVideo: videoEnabled,
+            width: 260,
+            height: 160,
+          }}
           onPublish={onPublish}
           onError={onPublishError}
           eventHandlers={publisherEventHandlers}
+          ref={publisherRef}
         />
         <OTStreams>
           <OTSubscriber
