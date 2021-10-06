@@ -1,8 +1,6 @@
 import React, { useCallback, useEffect } from 'react';
-import Webcam from 'react-webcam';
 
-import { useHistory } from 'react-router-dom';
-
+import { useHistory, useLocation } from 'react-router-dom';
 import Loader from 'react-loader-spinner';
 
 import { useActions, useValues } from 'kea';
@@ -11,77 +9,81 @@ import AppLogic from '../../App.logic';
 import LandingPageStyled from './LandingPage.styled';
 
 const LandingPage: React.FC = () => {
-  const { getCredentials, setAudioStatus, setVideoStatus } =
-    useActions(AppLogic);
-  const { audioEnabled, credentials, loading, videoEnabled } =
-    useValues(AppLogic);
+  const { getCredentials, setRoomId } = useActions(AppLogic);
+  const { credentials, loading, roomId } = useValues(AppLogic);
 
   const history = useHistory();
+  const location = useLocation();
 
   useEffect(() => {
-    // Swap session name param to create unique sessions
-    getCredentials('session');
+    const params = new URLSearchParams(location.search);
+    const urlRoomId = params.get('room');
+
+    if (urlRoomId) {
+      setRoomId(urlRoomId);
+      getCredentials(urlRoomId);
+    }
+  }, [location]);
+
+  useEffect(() => {
+    if (roomId && credentials?.sessionId) {
+      history.push(`join/${roomId}`);
+    }
+  }, [credentials, roomId]);
+
+  const createMeeting = useCallback(() => {
+    const newRoomId = Math.random().toString(36).slice(2);
+    setRoomId(newRoomId);
+    getCredentials(newRoomId);
   }, []);
-
-  const onJoin = useCallback(
-    () => history.push(`session/${credentials.sessionId}`),
-    [],
-  );
-
-  const toggleAudio = useCallback(
-    () => setAudioStatus(!audioEnabled),
-    [audioEnabled],
-  );
-
-  const toggleVideo = useCallback(
-    () => setVideoStatus(!videoEnabled),
-    [videoEnabled],
-  );
 
   return (
     <LandingPageStyled>
-      {loading && (
-        <Loader type="TailSpin" color="#363636" height={100} width={100} />
-      )}
-      {!loading && (
-        <>
+      <div className="sm-page">
+        <div className="sm-container">
           <div className="sm-column">
-            {videoEnabled ? (
-              <Webcam className="sm-preview-cam" />
-            ) : (
-              <img
-                alt="no video"
-                className="sm-preview-cam"
-                src="https://storage.sardius.media/-F3gEki2EeAOjKwDl8iC/archives/D7742FeA51811363c28DCC7E60eA/static/f96D09/b466B33cAF8C.jpg?width=500"
-              />
-            )}
+            <div className="sm-header">
+              Secure video conferencing for everyone
+            </div>
+            <div className="sm-subtitle">
+              Connect, collaborate, and celebrate from anywhere with Ruffalo
+              Meet
+            </div>
+            <div className="sm-actionContainer">
+              <div className="sm-actions">
+                <button
+                  className="sm-button"
+                  type="button"
+                  onClick={createMeeting}
+                >
+                  Create New Meeting
+                </button>
+                {loading ? (
+                  <Loader
+                    type="TailSpin"
+                    color="#363636"
+                    height={50}
+                    width={50}
+                  />
+                ) : (
+                  <p>
+                    {credentials?.sessionId
+                      ? `Meeting Link: ${credentials?.sessionId}`
+                      : ''}
+                  </p>
+                )}
 
-            <div className="videoActions">
-              <button
-                className={`sm-button ${!audioEnabled && 'sm-button-off'}`}
-                onClick={toggleAudio}
-                type="button"
-              >
-                {audioEnabled ? 'Disable Audio' : 'Enable Audio'}
-              </button>
-              <button
-                className={`sm-button ${!videoEnabled && 'sm-button-off'}`}
-                onClick={toggleVideo}
-                type="button"
-              >
-                {videoEnabled ? 'Disable Video' : 'Enable Video'}
-              </button>
+                {/* Future Join Meeting Input */}
+                {/* <input
+                  className="sm-input"
+                  type="text"
+                  placeholder="Enter Room Id"
+                /> */}
+              </div>
             </div>
           </div>
-
-          <div className="sm-column">
-            <h1 className="sm-title">WebRTC Meet</h1>
-            <button className="sm-button" onClick={onJoin} type="button">
-              Join now
-            </button>
-          </div>
-        </>
-      )}
+        </div>
+      </div>
     </LandingPageStyled>
   );
 };

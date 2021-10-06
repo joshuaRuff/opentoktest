@@ -1,43 +1,79 @@
 import styled from 'styled-components';
 
 export default styled.div`
-  align-items: center;
-  display: flex;
-  flex-wrap: wrap;
-  height: 100%;
-  justify-content: space-around;
-  padding: 50px 0px;
+  height: auto;
+  min-height: 100%;
+  position: relative;
 
-  .videoActions {
+  .sm-page {
+    height: calc(100vh - 64px);
+    min-height: 100%;
+    width: 100vw;
+    overflow-y: auto;
+    font-size: 1rem;
+    animation: 1s ease-in fadeIn 0s forwards;
+    opacity: 0;
+  }
+
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  .sm-container {
+    align-items: center;
+    display: -webkit-inline-box;
     display: flex;
-    justify-content: center;
-  }
-
-  .sm-preview-cam {
-    max-width: 500px;
-    width: 100%;
-  }
-
-  .sm-button {
-    background-color: #1a73e8;
-    border: none;
-    border-radius: 25px;
-    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-    color: #fefefe;
-    cursor: pointer;
-    font-weight: bold;
-    margin: 5px;
-    min-width: 100px;
-    padding: 15px 24px;
-  }
-
-  .sm-button-off {
-    background-color: red;
+    justify-content: space-evenly;
+    min-height: 100%;
+    width: 100vw;
   }
 
   .sm-column {
-    justify-content: center;
-    min-width: 315px;
-    text-align: center;
+    display: inline-flex;
+    flex-basis: 35rem;
+    flex-direction: column;
+    flex-shrink: 1;
+    max-width: 35rem;
+    padding: 1em 3em;
+  }
+
+  .sm-header {
+    font-size: 2.75rem;
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 3.25rem;
+    padding-bottom: 0.5em;
+  }
+
+  .sm-subtitle {
+    font-size: 1.125rem;
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 1.5rem;
+    color: #5f6368;
+    color: var(--gm-color-caption, #5f6368);
+    max-width: 30rem;
+    padding-bottom: 3em;
+  }
+
+  .sm-actionContainer {
+    align-self: flex-start;
+  }
+
+  .sm-actions {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .sm-input {
+    border: 1px solid #e6e6e6;
+    background-color: #fff;
+    font-size: 14px;
+    padding: 10px;
   }
 `;
