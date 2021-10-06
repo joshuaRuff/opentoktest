@@ -10,6 +10,7 @@ export default kea({
     setCredentials: credentials => ({ credentials }),
     setAudioStatus: status => ({ status }),
     setLoading: loading => ({ loading }),
+    setRoomId: id => ({ id }),
     setVideoStatus: status => ({ status }),
   },
 
@@ -30,6 +31,12 @@ export default kea({
       false,
       {
         setLoading: (_, { loading }) => loading,
+      },
+    ],
+    roomId: [
+      '',
+      {
+        setRoomId: (_, { id }) => id,
       },
     ],
     videoEnabled: [
