@@ -1,6 +1,10 @@
 body, html {
     background-color: #fff;
+    bottom: auto;
+    font-family: 'Google Sans Display', Roboto, Arial, sans-serif;
     height: 100%;
+    right: auto;
+    width: auto;
 }
 
 .error {
@@ -8,8 +12,8 @@ body, html {
 }
 
 #leaveCallButton {
-  background-color: red;
-  border: none;
+    background-color: red;
+    border: none;
     border-radius: 25px;
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
     color: #fefefe;
@@ -29,4 +33,21 @@ body, html {
     font-weight: bold;
     margin: 5px;
     padding: 10px;
+}
+
+.sm-button {
+    background-color: #1668d3;
+    border: none;
+    border-radius: 5px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    color: #fefefe;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+    margin: 0px 50px 0px 5px;
+    padding: 15px; 
+}
+
+.sm-button:hover {
+    background-color: #145cbb
 }
